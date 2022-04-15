@@ -1,0 +1,115 @@
+MENU = {
+    "espresso": {
+        "ingredients": {
+            "water": 50,
+            'milk': 0,
+            "coffee": 18,
+        },
+        "cost": 1.5,
+    },
+    "latte": {
+        "ingredients": {
+            "water": 200,
+            "milk": 150,
+            "coffee": 24,
+        },
+        "cost": 2.5,
+    },
+    "cappuccino": {
+        "ingredients": {
+            "water": 250,
+            "milk": 100,
+            "coffee": 24,
+        },
+        "cost": 3.0,
+    }
+}
+
+
+def how_much_resource_be_will_used(order):
+    """input order and resource return how much resource will be used"""
+    use_water = MENU.get(order).get('ingredients').get('water')
+    use_milk = MENU.get(order).get('ingredients').get('milk')
+    use_coffee = MENU.get(order).get('ingredients').get('coffee')
+    price = MENU.get(order).get('cost')
+    return use_water, use_milk, use_coffee, price
+
+
+def calculate_how_much_user_pay(quarters, dimes, nickels, pennies):
+    """input how many coins in each type return how much in $"""
+    how_much = 0
+    how_much += quarters * 0.25
+    how_much += dimes * 0.1
+    how_much += nickels * 0.05
+    how_much += pennies * 0.01
+    return how_much
+
+
+def calculate_left_resource(water, use_water, milk, use_milk,coffee,use_coffee):
+    """calculate how much resource left after use for report"""
+    water = water - use_water
+    milk = milk - use_milk
+    coffee = coffee - use_coffee
+    return water, milk, coffee
+
+water = 300
+milk = 200
+coffee = 100
+money = 0
+user_pay = 0
+change = 0
+
+use_water = 0
+use_milk = 0
+use_coffee = 0
+price = 0
+
+machine_on = True
+while machine_on:
+    order = input('What would you like? (espresso/latte/cappuccino): ')
+    if order == 'report':
+        print(f'Water   {water} ml')
+        print(f'Milk    {milk} ml')
+        print(f'Coffee  {coffee} g.')
+        print(f'Money   {money} $')
+    elif order == 'off':
+        machine_on = False
+    elif order in ["espresso", "cappuccino", "latte"]:
+        use_water, use_milk, use_coffee, price = how_much_resource_be_will_used(order)
+        if water - use_water < 0:
+            print('\n-- not enough water --\n')
+        elif milk - use_milk < 0:
+            print('\n-- not enough milk --\n')
+        elif coffee - use_coffee < 0:
+            print('\n-- not enough coffee --\n')
+        else:
+            print('please insert coins...')
+            quarters = int(input('how many quarters? : '))
+            dimes    = int(input('how many dims? : '))
+            nickels  = int(input('how many nickels? : '))
+            pennies  = int(input('how many pennies? : '))
+            user_pay = calculate_how_much_user_pay(quarters, dimes, nickels, pennies)
+            print('you insert value = ${:.2f}'.format(user_pay))
+            if user_pay > price:
+                change = user_pay - price
+                money += price
+                water, milk, coffee = calculate_left_resource(water, use_water, milk, use_milk, coffee, use_coffee)
+                print('Here is ${:.2f} change'.format(change))
+                print(f"here's your {order} ☕ . Enjoy !")
+            else:
+                print("Sorry that's not enough money. Money refunded.")
+    else:
+        print('wrong input')
+print('Turning off...\n.\n.\nGOOD BYE')
+
+
+
+
+
+
+
+
+
+
+
+
